@@ -137,7 +137,7 @@ function RequestPasswordReset() {
           {localize('com_auth_continue')}
         </button>
         <div className="mt-4 flex justify-center">
-          <a href="/login" className="text-sm text-green-500">
+          <a href="/login" className="text-sm text-red-500">
             {localize('com_auth_back_to_login')}
           </a>
         </div>
