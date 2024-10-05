@@ -4,6 +4,7 @@ import { useGetStartupConfig } from 'librechat-data-provider/react-query';
 import type { TStartupConfig } from 'librechat-data-provider';
 import AuthLayout from '~/components/Auth/AuthLayout';
 import { useLocalize } from '~/hooks';
+import { YMStat } from '~/ym-wrapper';
 
 const headerMap = {
   '/login': 'com_auth_welcome_back',
@@ -56,15 +57,18 @@ export default function StartupLayout({ isAuthenticated }: { isAuthenticated?: b
   };
 
   return (
-    <AuthLayout
-      header={headerText ? localize(headerText) : localize(headerMap[location.pathname])}
-      isFetching={isFetching}
-      startupConfig={startupConfig}
-      startupConfigError={startupConfigError}
-      pathname={location.pathname}
-      error={error}
-    >
-      <Outlet context={contextValue} />
-    </AuthLayout>
+    <>
+      <YMStat userEmail="" counterId={98439120}/>
+      <AuthLayout
+        header={headerText ? localize(headerText) : localize(headerMap[location.pathname])}
+        isFetching={isFetching}
+        startupConfig={startupConfig}
+        startupConfigError={startupConfigError}
+        pathname={location.pathname}
+        error={error}
+      >
+        <Outlet context={contextValue} />
+      </AuthLayout>
+    </>
   );
 }
