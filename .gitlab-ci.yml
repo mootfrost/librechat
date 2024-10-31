@@ -5,7 +5,7 @@ stages:
 
 
 variables:
-  IMAGE_NAME: brusnika/${CI_PROJECT_NAME}
+  IMAGE_NAME: $CI_COMMIT_REF_SLUG
   IMAGE_VER: $CI_COMMIT_SHORT_SHA
   BUILD_TARGET: "api-build"
 
