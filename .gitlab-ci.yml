@@ -21,6 +21,6 @@ build-job:
       --platform linux/amd64
       --target ${BUILD_TARGET}
       --file Dockerfile.multi
-      .; done
+      .
   interruptible: true
   tags: [ shell ] 
