@@ -13,6 +13,7 @@ build-job:
   stage: build
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - export IMAGE_TAG=${CONTAINER_REGISTRY}/${IMAGE_NAME}
     - > 
       docker buildx build
       --tag "${IMAGE_TAG}:${IMAGE_VER}"
@@ -21,6 +22,6 @@ build-job:
       --platform linux/amd64
       --target ${BUILD_TARGET}
       --file Dockerfile.multi
-      .
+      .;
   interruptible: true
   tags: [ shell ] 
