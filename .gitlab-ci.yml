@@ -1,0 +1,25 @@
+stages:
+  - build
+  - prebuild
+  - deploy
+
+
+variables:
+  IMAGE_NAME: brusnika/${CI_PROJECT_NAME}
+  IMAGE_VER: $CI_COMMIT_SHORT_SHA
+  BUILD_TARGET: "api-build"
+
+build-job:
+  stage: build
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - > 
+      docker buildx build
+      --tag "${IMAGE_TAG}:${IMAGE_VER}"
+      --tag "${IMAGE_TAG}:latest"
+      --push
+      --platform linux/amd64
+      --target ${BUILD_TARGET}
+      --file Dockerfile.multi
+  interruptible: true
+  tags: [ shell ] 
