@@ -13,7 +13,7 @@ build-job:
   stage: build
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
-    - export IMAGE_TAG="${CI_REGISTRY}/${IMAGE_NAME}"
+    - export IMAGE_TAG="${CI_REGISTRY_USER}/${IMAGE_NAME}"
     - > 
       docker buildx build
       --tag "${IMAGE_TAG}:${IMAGE_VER}"
