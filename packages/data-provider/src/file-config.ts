@@ -82,6 +82,7 @@ export const codeInterpreterMimeTypesList = [
   'application/typescript',
   'application/xml',
   'application/zip',
+  'audio/mpeg',
   ...excelFileTypes,
 ];
 
@@ -116,11 +117,14 @@ export const applicationMimeTypes =
 
 export const imageMimeTypes = /^image\/(jpeg|gif|png|webp)$/;
 
+export const audioMimeTypes = /^audio\/(mp3|wav|ogg|flac|aac|m4a|opus|mpeg)$/;
+
 export const supportedMimeTypes = [
   textMimeTypes,
   excelMimeTypes,
   applicationMimeTypes,
   imageMimeTypes,
+  audioMimeTypes,
 ];
 
 export const codeInterpreterMimeTypes = [
@@ -128,6 +132,7 @@ export const codeInterpreterMimeTypes = [
   excelMimeTypes,
   applicationMimeTypes,
   imageMimeTypes,
+  audioMimeTypes,
 ];
 
 export const codeTypeMapping: { [key: string]: string } = {

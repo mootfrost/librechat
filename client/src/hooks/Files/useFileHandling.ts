@@ -252,7 +252,7 @@ const useFileHandling = (params?: UseFileHandling) => {
         }
 
         if (!checkType(originalFile.type, supportedMimeTypes)) {
-          console.log(originalFile);
+          console.log(supportedMimeTypes);
           setError('Currently, unsupported file type: ' + originalFile.type);
           return false;
         }

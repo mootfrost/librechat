@@ -19,7 +19,6 @@ describe('MIME Type Regex Patterns', () => {
     'application/unknown',
     'image/bmp',
     'image/svg',
-    'audio/mp3',
   ];
 
   // Testing general supported MIME types
