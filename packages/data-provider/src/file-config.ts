@@ -117,7 +117,7 @@ export const applicationMimeTypes =
 
 export const imageMimeTypes = /^image\/(jpeg|gif|png|webp)$/;
 
-export const audioMimeTypes = /^audio\/(mp3|wav|ogg|flac|aac|m4a|opus|mpeg)$/;
+  export const audioMimeTypes = /^audio\/(mp3|wav|ogg|flac|aac|m4a|opus|mpeg)$/;
 
 export const supportedMimeTypes = [
   textMimeTypes,

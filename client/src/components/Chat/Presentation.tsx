@@ -1,14 +1,17 @@
 import { useRecoilValue } from 'recoil';
-import { useEffect, useMemo } from 'react';
-import { useGetStartupConfig } from 'librechat-data-provider/react-query';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useGetStartupConfig, useUpdateUserMutation } from 'librechat-data-provider/react-query';
 import { FileSources, LocalStorageKeys, getConfigDefaults } from 'librechat-data-provider';
 import type { ExtendedFile } from '~/common';
-import { useDragHelpers, useSetFilesToDelete } from '~/hooks';
+import { useAuthContext, useDragHelpers, useSetFilesToDelete } from '~/hooks';
 import DragDropOverlay from './Input/Files/DragDropOverlay';
 import { useDeleteFilesMutation } from '~/data-provider';
 import Artifacts from '~/components/Artifacts/Artifacts';
 import { SidePanel } from '~/components/SidePanel';
 import store from '~/store';
+import * as AlertDialog from '~/components/ui/AlertDialog';
+
+import useToast from '../../hooks/useToast';
 
 const defaultInterface = getConfigDefaults().interface;
 
@@ -22,10 +25,13 @@ export default function Presentation({
   useSidePanel?: boolean;
 }) {
   const { data: startupConfig } = useGetStartupConfig();
+  const { user, isAuthenticated, logout } = useAuthContext();
   const artifacts = useRecoilValue(store.artifactsState);
   const codeArtifacts = useRecoilValue(store.codeArtifacts);
   const hideSidePanel = useRecoilValue(store.hideSidePanel);
   const artifactsVisible = useRecoilValue(store.artifactsVisible);
+  const updateUser = useUpdateUserMutation();
+  const { showToast } = useToast();
 
   const interfaceConfig = useMemo(
     () => startupConfig?.interface ?? defaultInterface,
@@ -34,6 +40,7 @@ export default function Presentation({
 
   const setFilesToDelete = useSetFilesToDelete();
   const { isOver, canDrop, drop } = useDragHelpers();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { mutateAsync } = useDeleteFilesMutation({
     onSuccess: () => {
@@ -46,6 +53,12 @@ export default function Presentation({
   });
 
   useEffect(() => {
+    console.log(user);
+    if (user != undefined && !user.completedLearning) {
+      setIsDialogOpen(true);
+      console.log('sus');
+    }
+
     const filesToDelete = localStorage.getItem(LocalStorageKeys.FILES_TO_DELETE);
     const map = JSON.parse(filesToDelete ?? '{}') as Record<string, ExtendedFile>;
     const files = Object.values(map)
@@ -66,6 +79,25 @@ export default function Presentation({
     mutateAsync({ files });
   }, [mutateAsync]);
 
+  function setLearning(completed: boolean) {
+    if (user == undefined) {
+      return;
+    }
+    updateUser.mutate({ ...user, completedLearning: completed });
+  }
+
+  const denyLearning = useCallback(function denyLearning() {
+    setLearning(true);
+    setIsDialogOpen(false);
+    showToast({ message: 'Найти обучение всегда можно в разделе аккаунта' });
+  }, []);
+
+  const acceptLearning = useCallback(function acceptLearning() {
+    setLearning(true);
+    setIsDialogOpen(false);
+    window.open('https://study.brusnika.ru/catalog/content/info/5845', '_blank');
+  }, []);
+
   const isActive = canDrop && isOver;
 
   const defaultLayout = useMemo(() => {
@@ -81,6 +113,35 @@ export default function Presentation({
   const layout = () => (
     <div className="transition-width relative flex h-full w-full flex-1 flex-col items-stretch overflow-hidden bg-white pt-0 dark:bg-gray-800">
       <div className="flex h-full flex-col" role="presentation">
+        <AlertDialog.AlertDialog open={isDialogOpen}>
+          <AlertDialog.AlertDialogContent>
+            <AlertDialog.AlertDialogHeader>
+              <AlertDialog.AlertDialogTitle>
+                Добро пожаловать в корпоративный GPT Брусники!
+              </AlertDialog.AlertDialogTitle>
+              <img
+                className=""
+                src="/assets/greeting.png"
+                alt="Landscape photograph by Tobias Tullius"
+              />
+              <AlertDialog.AlertDialogDescription>
+                Чтобы быстрее освоиться в интерфейсе и открыть все возможности сервиса мы запустили
+                обучающий курс.
+              </AlertDialog.AlertDialogDescription>
+            </AlertDialog.AlertDialogHeader>
+            <AlertDialog.AlertDialogFooter>
+              <AlertDialog.AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                Позже
+              </AlertDialog.AlertDialogCancel>
+              <AlertDialog.AlertDialogAction onClick={denyLearning}>
+                Закрыть
+              </AlertDialog.AlertDialogAction>
+              <AlertDialog.AlertDialogAction onClick={acceptLearning} className="bg-green-400">
+                Начать обучение
+              </AlertDialog.AlertDialogAction>
+            </AlertDialog.AlertDialogFooter>
+          </AlertDialog.AlertDialogContent>
+        </AlertDialog.AlertDialog>
         {children}
         {isActive && <DragDropOverlay />}
       </div>
@@ -105,6 +166,35 @@ export default function Presentation({
               ) : null
           }
         >
+          <AlertDialog.AlertDialog open={isDialogOpen}>
+            <AlertDialog.AlertDialogContent>
+              <AlertDialog.AlertDialogHeader>
+                <AlertDialog.AlertDialogTitle>
+                  Добро пожаловать в корпоративный GPT Брусники!
+                </AlertDialog.AlertDialogTitle>
+                <img
+                  className=""
+                  src="/assets/greeting.png"
+                  alt="Landscape photograph by Tobias Tullius"
+                />
+                <AlertDialog.AlertDialogDescription>
+                  Чтобы быстрее освоиться в интерфейсе и открыть все возможности сервиса мы
+                  запустили обучающий курс.
+                </AlertDialog.AlertDialogDescription>
+              </AlertDialog.AlertDialogHeader>
+              <AlertDialog.AlertDialogFooter>
+                <AlertDialog.AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                  Позже
+                </AlertDialog.AlertDialogCancel>
+                <AlertDialog.AlertDialogAction onClick={denyLearning}>
+                  Закрыть
+                </AlertDialog.AlertDialogAction>
+                <AlertDialog.AlertDialogAction onClick={acceptLearning} className="bg-green-400">
+                  Начать обучение
+                </AlertDialog.AlertDialogAction>
+              </AlertDialog.AlertDialogFooter>
+            </AlertDialog.AlertDialogContent>
+          </AlertDialog.AlertDialog>
           <main className="flex h-full flex-col" role="main">
             {children}
             {isActive && <DragDropOverlay />}

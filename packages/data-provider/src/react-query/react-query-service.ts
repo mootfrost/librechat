@@ -422,6 +422,20 @@ export const useUpdateUserPluginsMutation = (
   });
 };
 
+export const useUpdateUserMutation = (
+  _options?: m.UpdateUserOptions,
+): UseMutationResult<t.TUser, unknown, t.TUser, unknown> => {
+  const queryClient = useQueryClient();
+  const { onSuccess, ...options } = _options ?? {};
+  return useMutation((payload: t.TUser) => dataService.UpdateUser(payload), {
+    ...options,
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries([QueryKeys.user]);
+      onSuccess?.(...args);
+    },
+  });
+};
+
 export const useGetStartupConfig = (
   config?: UseQueryOptions<t.TStartupConfig>,
 ): QueryObserverResult<t.TStartupConfig> => {

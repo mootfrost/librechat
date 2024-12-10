@@ -171,6 +171,10 @@ export const updateUserPlugins = (payload: t.TUpdateUserPlugins) => {
   return request.post(endpoints.userPlugins(), payload);
 };
 
+export const UpdateUser = (payload: t.TUser) => {
+  return request.put(endpoints.user(), payload);
+};
+
 /* Config */
 
 export const getStartupConfig = (): Promise<t.TStartupConfig> => {

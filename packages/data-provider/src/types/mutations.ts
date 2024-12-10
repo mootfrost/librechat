@@ -251,3 +251,5 @@ export type AcceptTermsMutationOptions = MutationOptions<
 
 /* Tools */
 export type UpdatePluginAuthOptions = MutationOptions<types.TUser, types.TUpdateUserPlugins>;
+
+export type UpdateUserOptions = MutationOptions<types.TUser, types.TUser>;

@@ -8,11 +8,13 @@ const {
   resendVerificationController,
   getTermsStatusController,
   acceptTermsController,
+  updateUserController,
 } = require('~/server/controllers/UserController');
 
 const router = express.Router();
 
 router.get('/', requireJwtAuth, getUserController);
+router.put('/', requireJwtAuth, updateUserController);
 router.get('/terms', requireJwtAuth, getTermsStatusController);
 router.post('/terms/accept', requireJwtAuth, acceptTermsController);
 router.post('/plugins', requireJwtAuth, updateUserPluginsController);

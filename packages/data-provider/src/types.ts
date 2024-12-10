@@ -112,6 +112,7 @@ export type TUser = {
   plugins: string[];
   createdAt: string;
   updatedAt: string;
+  completedLearning: boolean;
 };
 
 export type TGetConversationsResponse = {

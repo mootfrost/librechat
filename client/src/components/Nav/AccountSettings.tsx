@@ -105,6 +105,14 @@ function AccountSettings() {
         )}
         <Select.SelectItem
           value=""
+          onClick={() => window.open('https://study.brusnika.ru/catalog/content/info/5845', '_blank')}
+          className="select-item text-sm"
+        >
+          <LinkIcon aria-hidden="true" />
+          Обучение
+        </Select.SelectItem>
+        <Select.SelectItem
+          value=""
           onClick={() => setShowSettings(true)}
           className="select-item text-sm"
         >

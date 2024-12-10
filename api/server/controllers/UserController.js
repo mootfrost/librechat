@@ -7,6 +7,7 @@ const {
   deletePresets,
   deleteMessages,
   deleteUserById,
+  updateUser,
 } = require('~/models');
 const User = require('~/models/User');
 const { updateUserPluginAuth, deleteUserPluginAuth } = require('~/server/services/PluginService');
@@ -18,6 +19,7 @@ const { Transaction } = require('~/models/Transaction');
 const { logger } = require('~/config');
 
 const getUserController = async (req, res) => {
+  logger.debug('[updateUserController]');
   res.status(200).send(req.user);
 };
 
@@ -106,6 +108,17 @@ const updateUserPluginsController = async (req, res) => {
   }
 };
 
+const updateUserController = async (req, res) => {
+  const { user } = req;
+  try {
+    await updateUser(user.id, req.body);
+    res.status(200).send();
+  } catch (err) {
+    logger.error('[updateUserController]', err);
+    return res.status(500).json({ message: 'Something went wrong.' });
+  }
+};
+
 const deleteUserController = async (req, res) => {
   const { user } = req;
 
@@ -168,4 +181,5 @@ module.exports = {
   verifyEmailController,
   updateUserPluginsController,
   resendVerificationController,
+  updateUserController,
 };
