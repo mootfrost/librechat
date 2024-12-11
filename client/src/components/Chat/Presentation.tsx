@@ -54,7 +54,7 @@ export default function Presentation({
 
   useEffect(() => {
     console.log(user);
-    if (user != undefined && !user.completedLearning) {
+    if (user != undefined && user.completedLearning == undefined) {
       setIsDialogOpen(true);
       console.log('sus');
     }
@@ -87,7 +87,7 @@ export default function Presentation({
   }
 
   const denyLearning = useCallback(function denyLearning() {
-    setLearning(true);
+    setLearning(false);
     setIsDialogOpen(false);
     showToast({ message: 'Найти обучение всегда можно в разделе аккаунта' });
   }, []);
