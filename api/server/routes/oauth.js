@@ -18,8 +18,11 @@ router.use(loginLimiter);
 const oauthHandler = async (req, res) => {
   try {
     const user = await findUser({ email: req.user.email }, '_id');
-    if (user == null) {
+    if (!user) {
       await checkDomainAllowed(req, res);
+    }
+    else {
+        logger.info(`[checkDomains] user ${user} allowed`);
     }
     await checkBan(req, res);
     if (req.banned) {
