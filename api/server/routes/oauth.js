@@ -4,6 +4,7 @@ const passport = require('passport');
 const { loginLimiter, checkBan, checkDomainAllowed } = require('~/server/middleware');
 const { setAuthTokens } = require('~/server/services/AuthService');
 const { logger } = require('~/config');
+const { findUser } = require('~/models');
 
 const router = express.Router();
 
@@ -16,7 +17,10 @@ router.use(loginLimiter);
 
 const oauthHandler = async (req, res) => {
   try {
-    await checkDomainAllowed(req, res);
+    const user = await findUser({ email: req.user.email }, '_id');
+    if (user == null) {
+      await checkDomainAllowed(req, res);
+    }
     await checkBan(req, res);
     if (req.banned) {
       return;
