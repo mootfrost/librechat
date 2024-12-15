@@ -9,6 +9,8 @@ import { useMediaQuery, useHasAccess } from '~/hooks';
 import HeaderOptions from './Input/HeaderOptions';
 import BookmarkMenu from './Menus/BookmarkMenu';
 import AddMultiConvo from './AddMultiConvo';
+import { Callout } from '@radix-ui/themes';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 
 const defaultInterface = getConfigDefaults().interface;
 
@@ -34,21 +36,33 @@ export default function Header() {
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   return (
-    <div className="sticky top-0 z-10 flex h-14 w-full items-center justify-between bg-white p-2 font-semibold dark:bg-gray-800 dark:text-white">
+    <div className="sticky top-0 z-10 flex h-28 lg:h-14 w-full items-center justify-between bg-white p-2 font-semibold dark:bg-gray-800 dark:text-white">
       <div className="hide-scrollbar flex w-full items-center justify-between gap-2 overflow-x-auto">
-        <div className="flex items-center gap-2">
-          {!navVisible && <HeaderNewChat />}
-          {interfaceConfig.endpointsMenu === true && <EndpointsMenu />}
-          {modelSpecs.length > 0 && <ModelSpecsMenu modelSpecs={modelSpecs} />}
-          {<HeaderOptions interfaceConfig={interfaceConfig} />}
-          {interfaceConfig.presets === true && <PresetsMenu />}
-          {hasAccessToBookmarks === true && <BookmarkMenu />}
-          {hasAccessToMultiConvo === true && <AddMultiConvo />}
-          {isSmallScreen && (
-            <ExportAndShareMenu
-              isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false}
-            />
-          )}
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2">
+            {!navVisible && <HeaderNewChat />}
+            {interfaceConfig.endpointsMenu === true && <EndpointsMenu />}
+            {modelSpecs.length > 0 && <ModelSpecsMenu modelSpecs={modelSpecs} />}
+            {<HeaderOptions interfaceConfig={interfaceConfig} />}
+            {interfaceConfig.presets === true && <PresetsMenu />}
+            {hasAccessToBookmarks === true && <BookmarkMenu />}
+            {hasAccessToMultiConvo === true && <AddMultiConvo />}
+            {isSmallScreen && (
+              <ExportAndShareMenu
+                isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false}
+              />
+            )}
+          </div>
+          <div className="mr-auto flex">
+            <Callout.Root size="1" color="orange" role="alert">
+              <Callout.Icon>
+                <ExclamationTriangleIcon />
+              </Callout.Icon>
+              <Callout.Text className="text-pretty">
+                Никогда не загружайте конфиденциальные файлы!
+              </Callout.Text>
+            </Callout.Root>
+          </div>
         </div>
         {!isSmallScreen && (
           <ExportAndShareMenu isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false} />

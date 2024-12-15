@@ -89,6 +89,7 @@ junit.xml
 # docker override file
 docker-compose.override.yaml
 docker-compose.override.yml
+compose.yml
 
 # meilisearch
 meilisearch
