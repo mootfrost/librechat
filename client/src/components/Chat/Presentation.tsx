@@ -3,11 +3,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useGetStartupConfig, useUpdateUserMutation } from 'librechat-data-provider/react-query';
 import { FileSources, LocalStorageKeys, getConfigDefaults } from 'librechat-data-provider';
 import type { ExtendedFile } from '~/common';
-import { useAuthContext, useDragHelpers, useSetFilesToDelete } from '~/hooks';
-import DragDropOverlay from './Input/Files/DragDropOverlay';
+import { useAuthContext, useDragHelpers } from '~/hooks';
+import DragDropWrapper from '~/components/Chat/Input/Files/DragDropWrapper';
 import { useDeleteFilesMutation } from '~/data-provider';
 import Artifacts from '~/components/Artifacts/Artifacts';
 import { SidePanel } from '~/components/SidePanel';
+import { useSetFilesToDelete } from '~/hooks';
 import store from '~/store';
 import * as AlertDialog from '~/components/ui/AlertDialog';
 
@@ -111,7 +112,7 @@ export default function Presentation({
   const fullCollapse = useMemo(() => localStorage.getItem('fullPanelCollapse') === 'true', []);
 
   const layout = () => (
-    <div className="transition-width relative flex h-full w-full flex-1 flex-col items-stretch overflow-hidden bg-white pt-0 dark:bg-gray-800">
+    <div className="transition-width relative flex h-full w-full flex-1 flex-col items-stretch overflow-hidden bg-presentation pt-0">
       <div className="flex h-full flex-col" role="presentation">
         <AlertDialog.AlertDialog open={isDialogOpen}>
           <AlertDialog.AlertDialogContent>
@@ -143,17 +144,13 @@ export default function Presentation({
           </AlertDialog.AlertDialogContent>
         </AlertDialog.AlertDialog>
         {children}
-        {isActive && <DragDropOverlay />}
       </div>
     </div>
   );
 
   if (useSidePanel && !hideSidePanel && interfaceConfig.sidePanel === true) {
     return (
-      <div
-        ref={drop}
-        className="relative flex w-full grow overflow-hidden bg-white dark:bg-gray-800"
-      >
+      <DragDropWrapper className="relative flex w-full grow overflow-hidden bg-presentation">
         <SidePanel
           defaultLayout={defaultLayout}
           defaultCollapsed={defaultCollapsed}
@@ -197,17 +194,16 @@ export default function Presentation({
           </AlertDialog.AlertDialog>
           <main className="flex h-full flex-col" role="main">
             {children}
-            {isActive && <DragDropOverlay />}
           </main>
         </SidePanel>
-      </div>
+      </DragDropWrapper>
     );
   }
 
   return (
-    <div ref={drop} className="relative flex w-full grow overflow-hidden bg-white dark:bg-gray-800">
+    <DragDropWrapper className="relative flex w-full grow overflow-hidden bg-presentation">
       {layout()}
       {panel != null && panel}
-    </div>
+    </DragDropWrapper>
   );
 }
